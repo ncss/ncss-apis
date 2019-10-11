@@ -11,6 +11,8 @@ from datetime import datetime
 from num2words import num2words
 from words2num import w2n as words2num
 
+from art import text2art
+
 from ascii_art import Bar
 
 app = Flask('ncss-apis')
@@ -61,6 +63,12 @@ def numerals_api():
       abort(400)
   else:
     abort(400)
+
+@app.route('/asciiart/text', methods=['GET', 'POST'])
+def ascii_art_api():
+  value = request.args.get('value', '')
+  font = request.args.get('font')
+  return text2art(value, font=font)
 
 @app.route('/chart/bar', methods=['GET', 'POST'])
 def chart_bar_api():

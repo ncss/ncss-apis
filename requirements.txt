@@ -1,3 +1,4 @@
+art==4.1
 ascii-art==0.1.0
 astral==1.10.1
 certifi==2019.9.11
