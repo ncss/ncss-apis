@@ -8,6 +8,8 @@ import syllables
 from astral import Astral
 from datetime import datetime
 
+from ascii_art import Bar
+
 app = Flask('ncss-apis')
 
 @app.route('/emoji/<key>', methods=['GET', 'POST'])
@@ -39,6 +41,12 @@ def moon_phase_api():
     return "Last Quarter"
   else:
     return "New Moon"
+
+@app.route('/chart/bar', methods=['GET', 'POST'])
+def chart_bar_api():
+  data = {key: float(value) for key, value in request.args.items()}
+  b = Bar(data)
+  return b.render()
 
 if __name__ == '__main__':
   app.run(debug=True)
