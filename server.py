@@ -8,6 +8,9 @@ import syllables
 from astral import Astral
 from datetime import datetime
 
+from num2words import num2words
+from words2num import w2n as words2num
+
 from ascii_art import Bar
 
 app = Flask('ncss-apis')
@@ -41,6 +44,23 @@ def moon_phase_api():
     return "Last Quarter"
   else:
     return "New Moon"
+
+@app.route('/convert/number', methods=['GET', 'POST'])
+def numerals_api():
+  value = request.args.get('value')
+  to = request.args.get('to', 'cardinal')
+
+  if value:
+    if to == 'cardinal' or to == 'words':
+      return num2words(value, to='cardinal')
+    elif to == 'ordinal' or to =='rank':
+      return num2words(value, to='ordinal')
+    elif to == 'numerals' or to == 'number':
+      return str(words2num(value))
+    else:
+      abort(400)
+  else:
+    abort(400)
 
 @app.route('/chart/bar', methods=['GET', 'POST'])
 def chart_bar_api():
