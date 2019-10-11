@@ -2,6 +2,7 @@ astral==1.10.1
 certifi==2019.9.11
 chardet==3.0.4
 Click==7.0
+emojislib==0.0.1
 Flask==1.1.1
 gunicorn==19.9.0
 idna==2.8

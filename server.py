@@ -1,10 +1,24 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, abort, jsonify
+
+import emojislib
+import random
 
 import syllables
+
 from astral import Astral
 from datetime import datetime
 
 app = Flask('ncss-apis')
+
+@app.route('/emoji/<key>', methods=['GET', 'POST'])
+def emoji_api(key=''):
+  emojis = set(emojislib.search_by_key(key) + emojislib.search_by_name(key) + emojislib.search_by_cate(key))
+  print(emojis)
+
+  if emojis:
+    return str(random.choice(list(emojis)))
+  else:
+    abort(404)
 
 @app.route('/syllables/<word>', methods=['GET', 'POST'])
 def syllables_api(word=''):
