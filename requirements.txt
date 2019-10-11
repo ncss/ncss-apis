@@ -1,3 +1,4 @@
+astral==1.10.1
 certifi==2019.9.11
 chardet==3.0.4
 Click==7.0
@@ -7,6 +8,7 @@ idna==2.8
 itsdangerous==1.1.0
 Jinja2==2.10.3
 MarkupSafe==1.1.1
+pytz==2019.3
 requests==2.22.0
 syllables==0.1.0
 urllib3==1.25.6
