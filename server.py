@@ -12,6 +12,8 @@ from datetime import datetime
 from num2words import num2words
 from words2num import w2n as words2num
 
+import pint
+
 from art import text2art
 
 from ascii_art import Bar
@@ -76,6 +78,45 @@ def numerals_api():
       abort(400)
   else:
     abort(400)
+
+units = pint.UnitRegistry()
+units.define('tims = 1.5 * m = tims')
+
+@app.route('/convert/unit', methods=['GET', 'POST'])
+def units_api():
+  quantity = request.args.get('quantity')
+  unit = request.args.get('unit')
+  to = request.args.get('to')
+
+  if quantity == None:
+    abort(400, 'No quantity parameter given')
+  if unit == None:
+    abort(400, 'No unit parameter given')
+  if to == None:
+    abort(400, 'No to parameter given')
+
+  try:
+    unitless_quantity = units.parse_expression(quantity)
+  except pint.errors.DefinitionSyntaxError:
+    abort(400, f'Quantity {quantity!r} is invalid')
+  try:
+    from_unit = units.parse_expression(unit)
+  except pint.errors.UndefinedUnitError:
+    abort(404, f'Unit {unit!r} not found')
+  try:
+    to_unit = units.parse_expression(to)
+  except pint.errors.UndefinedUnitError:
+    abort(404, f'Unit {unit!r} not found')
+
+  value = unitless_quantity * from_unit
+
+  try:
+    to_value = value.to(to_unit)
+  except pint.errors.DimensionalityError:
+    abort(400, f'Cannot convert from {unit} to {to}')
+
+  return f'{to_value:P}'
+
 
 @app.route('/asciiart/text', methods=['GET', 'POST'])
 def ascii_art_api():
