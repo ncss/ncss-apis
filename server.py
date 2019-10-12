@@ -1,4 +1,4 @@
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, abort, jsonify, redirect
 from werkzeug.exceptions import HTTPException
 
 import emojislib
@@ -19,6 +19,10 @@ from art import text2art
 from ascii_art import Bar
 
 app = Flask('ncss-apis')
+
+@app.route('/')
+def hello():
+    return redirect("https://github.com/kennib/ncss-api", code=302)
 
 @app.errorhandler(Exception)
 def handle_error(e):
