@@ -76,5 +76,22 @@ def chart_bar_api():
   b = Bar(data)
   return b.render()
 
+@app.route('/goldenhour', methods=['GET', 'POST'])
+def goldenhour_api():
+  city = request.args.get('city', 'Sydney')
+
+  a = Astral()
+  a.solar_depression = 'civil'
+  try:
+    city_data = a[city]
+  except KeyError:
+    abort(404)
+
+  start = city_data.time_at_elevation(174)
+  end = city_data.time_at_elevation(184)
+  time = lambda dt: dt.strftime('%-I:%M %p')
+
+  return f'Golden hour is {time(start)} - {time(end)} in {city}'
+
 if __name__ == '__main__':
   app.run(debug=True)
