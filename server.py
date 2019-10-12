@@ -1,4 +1,5 @@
 from flask import Flask, request, abort, jsonify
+from werkzeug.exceptions import HTTPException
 
 import emojislib
 import random
@@ -16,6 +17,18 @@ from art import text2art
 from ascii_art import Bar
 
 app = Flask('ncss-apis')
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    if isinstance(e, HTTPException):
+        code = e.code
+        message = e.description
+    else:
+      code = 500
+      message = f'There was an internal server error'
+      app.logger.error(e)
+
+    return jsonify({'error': code, 'message': message})
 
 @app.route('/emoji/<key>', methods=['GET', 'POST'])
 def emoji_api(key=''):
