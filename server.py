@@ -53,7 +53,24 @@ def syllables_api(word=''):
 @app.route('/moonphase', methods=['GET', 'POST'])
 def moon_phase_api():
   a = Astral()
-  phase = a.moon_phase(datetime.now())
+  year = request.args.get('year')
+  month = request.args.get('month')
+  day = request.args.get('day')
+
+  if year == None:
+    abort(400, 'No year parameter given')
+  else:
+    year = int(year)
+  if month == None:
+    abort(400, 'No month parameter given')
+  else:
+    month = int(month)
+  if day == None:
+    abort(400, 'No day parameter given')
+  else:
+    day = int(day)
+
+  phase = a.moon_phase(datetime(year, month, day))
 
   if phase < 3.5:
     return "New Moon"
