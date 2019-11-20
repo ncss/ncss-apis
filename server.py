@@ -18,6 +18,8 @@ from art import text2art
 
 from ascii_art import Bar
 
+import string
+
 app = Flask('ncss-apis')
 
 @app.route('/')
@@ -167,6 +169,12 @@ def goldenhour_api():
   time = lambda dt: dt.strftime('%-I:%M %p')
 
   return f'Golden hour is {time(start)} - {time(end)} in {city}'
+
+@app.route('/secret', methods=['GET', 'POST'])
+def secret():
+  random.seed(a='secret')
+  secret = ''.join(random.sample(string.printable, 100))
+  return secret
 
 if __name__ == '__main__':
   app.run(debug=True)
