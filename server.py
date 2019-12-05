@@ -1,6 +1,9 @@
 from flask import Flask, request, abort, jsonify, redirect
 from werkzeug.exceptions import HTTPException
 
+from flask_swagger import swagger
+from flask_swagger_ui import get_swaggerui_blueprint
+
 import emojislib
 import random
 
@@ -22,9 +25,27 @@ import string
 
 app = Flask('ncss-apis')
 
+SWAGGER_URL = '/docs' 
+API_URL = '/api/spec' 
+swaggerui_blueprint = get_swaggerui_blueprint( 
+    SWAGGER_URL, 
+    API_URL, 
+    config={'app_name': 'NCSS APIs', 'deepLinking': True}, 
+) 
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL) 
+ 
+ 
+@app.route("/api/spec") 
+def spec(): 
+    swag = swagger(app) 
+    swag['info']['version'] = '1.0' 
+    swag['info']['title'] = 'NCSS APIs' 
+    return jsonify(swag)
+
+
 @app.route('/')
 def hello():
-    return redirect("https://github.com/kennib/ncss-api", code=302)
+    return redirect("/docs", code=302)
 
 @app.errorhandler(Exception)
 def handle_error(e):
@@ -40,6 +61,28 @@ def handle_error(e):
 
 @app.route('/emoji/<key>', methods=['GET', 'POST'])
 def emoji_api(key=''):
+  """
+    Fetch an Emoji
+    ---
+    tags:
+      - emoji 
+    parameters:
+      - in: path
+        name: key 
+        required: true
+        schema:
+          type: string
+          example: dog
+        description: the emoji you would like to search for
+    responses:
+      200:
+        description: A random emoji matching your search
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: 🐩
+  """
   emojis = set(emojislib.search_by_key(key) + emojislib.search_by_name(key) + emojislib.search_by_cate(key))
   print(emojis)
 
@@ -50,10 +93,68 @@ def emoji_api(key=''):
 
 @app.route('/syllables/<word>', methods=['GET', 'POST'])
 def syllables_api(word=''):
+  """
+    Count the syllables in a word 
+    ---
+    tags:
+      - syllables 
+    parameters:
+      - in: path
+        name: word 
+        required: true
+        schema:
+          type: string
+          example: hello
+        description: the word you would like to count the syllables of 
+    responses:
+      200:
+        description: The number of syllables 
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: 2
+  """
   return str(syllables.estimate(word))
 
 @app.route('/moonphase', methods=['GET', 'POST'])
 def moon_phase_api():
+  """
+    Show the moon's phase for a given date
+    ---
+    tags:
+      - moon phase 
+    parameters:
+      - in: query
+        name: year 
+        required: true
+        schema:
+          type: integer 
+          example: 2019
+        description: the year you would like the moon phase for
+      - in: query
+        name: month 
+        required: true
+        schema:
+          type: integer 
+          example: 1
+        description: the month you would like the moon phase for
+      - in: query
+        name: day 
+        required: true
+        schema:
+          type: integer 
+          example: 13
+        description: the day of the month you would like the moon phase for
+    responses:
+      200:
+        description: The moon phase 
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: Full Moon
+  """
   a = Astral()
   year = request.args.get('year')
   month = request.args.get('month')
@@ -87,6 +188,37 @@ def moon_phase_api():
 
 @app.route('/convert/number', methods=['GET', 'POST'])
 def numerals_api():
+  """
+    Convert numbers into different representations (e.g., 1, one, first)
+    ---
+    tags:
+      - convert
+      - number 
+    parameters:
+      - in: query
+        name: value 
+        required: true
+        schema:
+          type: string 
+          example: 11
+        description: the value you would like to convert
+      - in: query
+        name: to
+        required: true
+        schema:
+          type: string 
+          example: words
+          enum: [words, rank, number]
+        description: the kind of value (words | rank | number) you would like to convert to
+    responses:
+      200:
+        description: The converted value 
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: eleven
+  """
   value = request.args.get('value')
   to = request.args.get('to', 'cardinal')
 
