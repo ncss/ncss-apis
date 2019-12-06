@@ -61,7 +61,7 @@ def handle_error(e):
 
     return jsonify({'error': code, 'message': message})
 
-@app.route('/emoji/<key>', methods=['GET', 'POST'])
+@app.route('/emoji/<key>', methods=['GET'])
 def emoji_api(key=''):
   """
     Fetch an Emoji
@@ -93,7 +93,7 @@ def emoji_api(key=''):
   else:
     abort(404)
 
-@app.route('/syllables/<word>', methods=['GET', 'POST'])
+@app.route('/syllables/<word>', methods=['GET'])
 def syllables_api(word=''):
   """
     Count the syllables in a word 
@@ -119,7 +119,7 @@ def syllables_api(word=''):
   """
   return str(syllables.estimate(word))
 
-@app.route('/moonphase', methods=['GET', 'POST'])
+@app.route('/moonphase', methods=['GET'])
 def moon_phase_api():
   """
     Show the moon's phase for a given date
@@ -188,7 +188,7 @@ def moon_phase_api():
   else:
     return "New Moon"
 
-@app.route('/convert/number', methods=['GET', 'POST'])
+@app.route('/convert/number', methods=['GET'])
 def numerals_api():
   """
     Convert numbers into different representations (e.g., 1, one, first)
@@ -238,7 +238,7 @@ def numerals_api():
 units = pint.UnitRegistry()
 units.define('tims = 1.5 * m = tims')
 
-@app.route('/convert/unit', methods=['GET', 'POST'])
+@app.route('/convert/unit', methods=['GET'])
 def units_api():
   quantity = request.args.get('quantity')
   unit = request.args.get('unit')
@@ -274,19 +274,19 @@ def units_api():
   return f'{to_value:P}'
 
 
-@app.route('/asciiart/text', methods=['GET', 'POST'])
+@app.route('/asciiart/text', methods=['GET'])
 def ascii_art_api():
   value = request.args.get('value', '')
   font = request.args.get('font')
   return text2art(value, font=font)
 
-@app.route('/chart/bar', methods=['GET', 'POST'])
+@app.route('/chart/bar', methods=['GET'])
 def chart_bar_api():
   data = {key: float(value) for key, value in request.args.items()}
   b = Bar(data)
   return b.render()
 
-@app.route('/goldenhour', methods=['GET', 'POST'])
+@app.route('/goldenhour', methods=['GET'])
 def goldenhour_api():
   city = request.args.get('city', 'Sydney')
 
@@ -303,7 +303,7 @@ def goldenhour_api():
 
   return f'Golden hour is {time(start)} - {time(end)} in {city}'
 
-@app.route('/secret', methods=['GET', 'POST'])
+@app.route('/secret', methods=['GET'])
 def secret():
   random.seed(a='secret')
   secret = ''.join(random.sample(string.printable, 100))
