@@ -459,20 +459,23 @@ def bus_hail():
     ---
     tags:
       - buses
+    consumes:
+      - application/json
     parameters:
-      - in: formData
-        name: stop_id
-        required: true
+      - in: body
         schema:
-          type: string
-          example: '82'
-        description: the id of the stop where you would like to hail the bus
-      - in: formData
-        name: time
-        schema:
-          type: string
-          example: '15:20:00'
-        description: the time (24 hour time) you want to hail the bus
+          id: Hail
+          type: object
+          properties:
+            stop_id:
+              required: True
+              type: string
+              example: '82'
+              description: the id of the stop where you would like to hail the bus
+            time:
+              type: string
+              example: '15:20:00'
+              description: the time (24 hour time) you want to hail the bus
     responses:
       200:
         description: A JSON object confirming your hail
@@ -492,7 +495,11 @@ def bus_hail():
                   type: array
                   description: An list of objects describing the stop times
   '''
-  stop_id = request.form['stop_id']
+  try:
+    data = request.get_json()
+  except:
+    data = request.form
+  stop_id = data['stop_id']
   stop = [stop for stop in stops if stop['stop_id'] == stop_id]
 
   if not stop:
