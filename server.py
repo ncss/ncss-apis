@@ -493,9 +493,7 @@ def bus_hail():
                   description: An list of objects describing the stop times
   '''
   stop_id = request.form['stop_id']
-  print(stop_id)
   stop = [stop for stop in stops if stop['stop_id'] == stop_id]
-  print(stop)
 
   if not stop:
     abort(404, 'Stop not found')
