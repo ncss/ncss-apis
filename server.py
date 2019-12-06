@@ -125,7 +125,7 @@ def moon_phase_api():
     Show the moon's phase for a given date
     ---
     tags:
-      - moon phase 
+      - astronomy 
     parameters:
       - in: query
         name: year 
@@ -240,6 +240,12 @@ units.define('tims = 1.5 * m = tims')
 
 @app.route('/convert/unit', methods=['GET'])
 def units_api():
+  '''
+    Convert a value from one unit to another
+    ---
+    tags:
+      - convert
+  '''
   quantity = request.args.get('quantity')
   unit = request.args.get('unit')
   to = request.args.get('to')
@@ -276,18 +282,36 @@ def units_api():
 
 @app.route('/asciiart/text', methods=['GET'])
 def ascii_art_api():
+  '''
+    Render a string using ASCII art
+    ---
+    tags:
+      - ASCII
+  '''
   value = request.args.get('value', '')
   font = request.args.get('font')
   return text2art(value, font=font)
 
 @app.route('/chart/bar', methods=['GET'])
 def chart_bar_api():
+  '''
+    Render data as a bar chart using ASCII art
+    ---
+    tags:
+      - ASCII 
+  '''
   data = {key: float(value) for key, value in request.args.items()}
   b = Bar(data)
   return b.render()
 
 @app.route('/goldenhour', methods=['GET'])
 def goldenhour_api():
+  '''
+    Find out the time of today's 'golden hour' for a given city
+    ---
+    tags:
+      - astronomy
+  '''
   city = request.args.get('city', 'Sydney')
 
   a = Astral()
@@ -305,6 +329,12 @@ def goldenhour_api():
 
 @app.route('/secret', methods=['GET'])
 def secret():
+  '''
+    Ssssh it's a secret
+    ---
+    tags:
+      - secret
+  '''
   random.seed(a='secret')
   secret = ''.join(random.sample(string.printable, 100))
   return secret
