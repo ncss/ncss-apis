@@ -59,7 +59,7 @@ def handle_error(e):
       message = f'There was an internal server error'
       app.logger.error(e)
 
-    return jsonify({'error': code, 'message': message})
+    return jsonify({'error': code, 'message': message}), code
 
 @app.route('/emoji/<key>', methods=['GET'])
 def emoji_api(key=''):
