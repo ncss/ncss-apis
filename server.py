@@ -245,6 +245,36 @@ def units_api():
     ---
     tags:
       - convert
+    parameters:
+      - in: query
+        name: quantity
+        required: true
+        schema:
+          type: number
+          example: 3.14
+        description: the quantity you would like to convert
+      - in: query
+        name: unit
+        required: true
+        schema:
+          type: string
+          example: km
+        description: the unit you would like to convert from
+      - in: query
+        name: to
+        required: true
+        schema:
+          type: string
+          example: m
+        description: the unit you would like to convert to
+    responses:
+      200:
+        description: The converted value 
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: 3140 metres
   '''
   quantity = request.args.get('quantity')
   unit = request.args.get('unit')
@@ -287,8 +317,31 @@ def ascii_art_api():
     ---
     tags:
       - ASCII
+    parameters:
+      - in: query
+        name: string 
+        required: true
+        schema:
+          type: string
+          example: Shelley
+        description: the string you would like rendered using ASCII art 
+      - in: query
+        name: font
+        required: true
+        schema:
+          type: string
+          example: 3d
+        description: the font used to render the ASCII text in 
+    responses:
+      200:
+        description: The converted value 
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: 3140 metres
   '''
-  value = request.args.get('value', '')
+  value = request.args.get('string', '')
   font = request.args.get('font')
   return text2art(value, font=font)
 
@@ -299,6 +352,33 @@ def chart_bar_api():
     ---
     tags:
       - ASCII 
+    parameters:
+      - in: query
+        name: item1
+        schema:
+          type: integer
+          example: 12
+        description: an example of a key/value pair
+      - in: query
+        name: item2
+        schema:
+          type: integer
+          example: 23
+        description: an example of a key/value pair
+      - in: query
+        name: item3
+        schema:
+          type: integer
+          example: 1
+        description: an example of a key/value pair
+    responses:
+      200:
+        description: The bar chart
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: item1 | ###############################                              | 12.0
   '''
   data = {key: float(value) for key, value in request.args.items()}
   b = Bar(data)
@@ -311,6 +391,22 @@ def goldenhour_api():
     ---
     tags:
       - astronomy
+    parameters:
+      - in: query
+        name: city
+        schema:
+          type: string 
+          example: Sydney
+          default: Sydney
+        description: the city you want to know the time of golden hour in
+    responses:
+      200:
+        description: A description of the time of golden hour 
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: Golden hour is 7:27pm - 8:22pm in Sydney'
   '''
   city = request.args.get('city', 'Sydney')
 
@@ -334,6 +430,14 @@ def secret():
     ---
     tags:
       - secret
+    responses:
+      200:
+        description: The secret response 
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: I'm not revealing my secret!
   '''
   random.seed(a='secret')
   secret = ''.join(random.sample(string.printable, 100))
