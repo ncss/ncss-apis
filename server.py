@@ -330,8 +330,9 @@ def ascii_art_api():
         required: true
         schema:
           type: string
+          enum: ['1943', '3d_diagonal', 'epic', 'graffiti', 'isometric1', 'sub-zero', 'nscript', 'nancyj', 'black_square', 'upside_down']
           example: 3d
-        description: the font used to render the ASCII text in 
+        description: the [font](https://github.com/sepandhaghighi/art/blob/master/FontList.ipynb) used to render the ASCII text in
     responses:
       200:
         description: The converted value 
