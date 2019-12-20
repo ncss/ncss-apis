@@ -85,8 +85,7 @@ def emoji_api(key=''):
               type: string
               example: 🐩
   """
-  emojis = set(emojislib.search_by_key(key) + emojislib.search_by_name(key) + emojislib.search_by_cate(key))
-  print(emojis)
+  emojis = set(emojislib.by_key(key) or emojislib.by_name(key) or emojislib.search_by_name(key) or emojislib.search_by_key(key) or emojislib.search_by_cate(key))
 
   if emojis:
     return str(random.choice(list(emojis)))
