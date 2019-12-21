@@ -640,6 +640,46 @@ def bus_hail():
 
   return jsonify(hail)
 
+@app.route('/woah', methods=['GET'])
+def woah():
+  '''
+    Basic endpoint to catch/throw "the woah"
+    ---
+    tags:
+      - ASCII
+    responses:
+      200:
+        description: A JSON object of us catching the woah
+        content:
+          text/json:
+            schema:
+              properties:
+                message:
+                  type: string
+                  example: '        😲
+                                  ✊|
+                                    |✊
+                                   / \\
+                                  /    \\'
+                  description: Caught the woah!
+    
+  '''
+  catch = '''
+        😲
+       ✊|
+         |✊
+        / \\
+      /    \\
+  '''
+  # udpated args syntax for GET request
+  value = request.args.get('value')
 
+  if value is None:
+    abort(400, "No value field provided")
+  elif "catch" in value: 
+    return jsonify(catch)
+  else:
+    abort(400, "How can I catch if you didnt throw?")
+    
 if __name__ == '__main__':
   app.run(debug=True)
