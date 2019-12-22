@@ -1,4 +1,4 @@
-from flask import Flask, request, abort, jsonify, redirect
+from flask import Flask, request, abort, jsonify, redirect, make_response
 from werkzeug.exceptions import HTTPException
 
 from flask_swagger import swagger
@@ -25,6 +25,13 @@ import string
 
 import csv
 
+def plain_textify(string):
+    """Convert a string to a UTF-8 encoded body with the text/plain
+    mimetype."""
+    resp = make_response(string)
+    resp.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    return resp
+
 app = Flask('ncss-apis')
 
 SWAGGER_URL = '/docs' 
@@ -34,9 +41,9 @@ swaggerui_blueprint = get_swaggerui_blueprint(
     API_URL, 
     config={'app_name': 'NCSS APIs', 'deepLinking': True}, 
 ) 
-app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL) 
- 
- 
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
+
+
 @app.route("/api/spec") 
 def spec(): 
     swag = swagger(app) 
@@ -88,7 +95,7 @@ def emoji_api(key=''):
   emojis = set(emojislib.by_key(key) or emojislib.by_name(key) or emojislib.search_by_name(key) or emojislib.search_by_key(key) or emojislib.search_by_cate(key))
 
   if emojis:
-    return str(random.choice(list(emojis)))
+    return plain_textify(str(random.choice(list(emojis))))
   else:
     abort(404)
 
@@ -116,7 +123,7 @@ def syllables_api(word=''):
               type: string
               example: 2
   """
-  return str(syllables.estimate(word))
+  return plain_textify(str(syllables.estimate(word)))
 
 @app.route('/moonphase', methods=['GET'])
 def moon_phase_api():
@@ -177,15 +184,17 @@ def moon_phase_api():
   phase = a.moon_phase(datetime(year, month, day))
 
   if phase < 3.5:
-    return "New Moon"
+    phase_text = "New Moon"
   elif phase < 10.5:
-    return "First Quarter"
+    phase_text = "First Quarter"
   elif phase < 17.5:
-    return "Full Moon"
+    phase_text = "Full Moon"
   elif phase < 24.5:
-    return "Last Quarter"
+    phase_text = "Last Quarter"
   else:
-    return "New Moon"
+    phase_text = "New Moon"
+  
+  return plain_textify(phase_text)
 
 @app.route('/convert/number', methods=['GET'])
 def numerals_api():
@@ -224,11 +233,11 @@ def numerals_api():
 
   if value:
     if to == 'cardinal' or to == 'words':
-      return num2words(value, to='cardinal')
+      return plain_textify(num2words(value, to='cardinal'))
     elif to == 'ordinal' or to =='rank':
-      return num2words(value, to='ordinal')
+      return plain_textify(num2words(value, to='ordinal'))
     elif to == 'numerals' or to == 'number':
-      return str(words2num(value))
+      return plain_textify(str(words2num(value)))
     else:
       abort(400)
   else:
@@ -306,7 +315,7 @@ def units_api():
   except pint.errors.DimensionalityError:
     abort(400, f'Cannot convert from {unit} to {to}')
 
-  return f'{to_value:P}'
+  return plain_textify(f'{to_value:P}')
 
 
 @app.route('/asciiart/text', methods=['GET'])
@@ -343,7 +352,7 @@ def ascii_art_api():
   '''
   value = request.args.get('string', '')
   font = request.args.get('font')
-  return text2art(value, font=font)
+  return plain_textify(text2art(value, font=font))
 
 @app.route('/chart/bar', methods=['GET'])
 def chart_bar_api():
@@ -382,7 +391,7 @@ def chart_bar_api():
   '''
   data = {key: float(value) for key, value in request.args.items()}
   b = Bar(data)
-  return b.render()
+  return plain_textify(b.render())
 
 @app.route('/goldenhour', methods=['GET'])
 def goldenhour_api():
@@ -421,7 +430,7 @@ def goldenhour_api():
   end = city_data.time_at_elevation(184)
   time = lambda dt: dt.strftime('%-I:%M %p')
 
-  return f'Golden hour is {time(start)} - {time(end)} in {city}'
+  return plain_textify(f'Golden hour is {time(start)} - {time(end)} in {city}')
 
 @app.route('/secret', methods=['GET'])
 def secret():
@@ -441,7 +450,7 @@ def secret():
   '''
   random.seed(a='secret')
   secret = ''.join(random.sample(string.printable, 100))
-  return secret
+  return plain_textify(secret)
 
 stops = list(csv.DictReader(open('data/buses/stops.txt', encoding="utf-8-sig")))
 stop_times = list(csv.DictReader(open('data/buses/stop_times.txt', encoding="utf-8-sig")))
