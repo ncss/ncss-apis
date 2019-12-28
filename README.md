@@ -1,25 +1,14 @@
 # NCSS APIs
 
-## Emoji
+## Docs
 
-```/emoji/{emoji}```
+Visit `/docs/` for the Swagger api specification.
 
-`emoji` The name or category an emoji
 
-## Syllables
+## Development
 
-## Moon phase
+Run the development server:
 
-## Golden hour
-
-## Convert
-
-### Number
-
-### Unit
-
-## ASCII art
-
-### Chart
-
-### Bar Chart
+```
+python run.py
+```
