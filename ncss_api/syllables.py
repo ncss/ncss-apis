@@ -8,7 +8,7 @@ from .app import app
 from .utils import plain_textify
 
 @app.route('/syllables/<word>', methods=['GET'])
-def syllables_api(word=''):
+def syllables_api(word):
   """
     Count the syllables in a word
     ---
