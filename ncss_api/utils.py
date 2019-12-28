@@ -6,4 +6,3 @@ def plain_textify(string):
     resp = make_response(string)
     resp.headers['Content-Type'] = 'text/plain; charset=utf-8'
     return resp
-
