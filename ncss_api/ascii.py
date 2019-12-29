@@ -1,6 +1,6 @@
 from ascii_art import Bar
 from art import text2art
-from flask import request, abort, jsonify
+from flask import request, abort
 
 from .app import app
 from .utils import plain_textify
@@ -118,6 +118,6 @@ def woah():
   if value is None:
     abort(400, "No value field provided")
   elif "catch" in value:
-    return jsonify(catch)
+    return plain_textify(catch)
   else:
     abort(400, "How can I catch if you didnt throw?")
