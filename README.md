@@ -2,7 +2,7 @@
 
 ## Docs
 
-Visit `/docs/` for the Swagger api specification.
+Visit [http://localhost:5000/docs/](http://localhost:5000/docs/) or [http://apis.ncss.cloud/docs/](http://apis.ncss.cloud/docs/) for the Swagger api specification.
 
 
 ## Development
