@@ -39,7 +39,8 @@ def ascii_art_api():
   '''
   value = request.args.get('string', '')
   font = request.args.get('font')
-  return plain_textify(text2art(value, font=font))
+  art = text2art(value, font=font).replace('\r\n', '\n')
+  return plain_textify(art)
 
 @app.route('/chart/bar', methods=['GET'])
 def chart_bar_api():
@@ -76,6 +77,9 @@ def chart_bar_api():
               type: string
               example: item1 | ###############################                              | 12.0
   '''
+  # XXX: crashes if value cannot be converted to float
+  # XXX: crashes if no query string items
+  # XXX: api docs above should be more clear
   data = {key: float(value) for key, value in request.args.items()}
   b = Bar(data)
   return plain_textify(b.render())
