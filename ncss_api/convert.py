@@ -26,12 +26,11 @@ def numerals_api():
         description: the value you would like to convert
       - in: query
         name: to
-        required: true
-        schema:
-          type: string
-          example: words
-          enum: [words, rank, number]
-        description: the kind of value (words | rank | number) you would like to convert to
+        type: string
+        default: words
+        example: words
+        enum: ["words", "rank", "number"]
+        description: the kind of value you would like to convert to
     responses:
       200:
         description: The converted value
@@ -42,19 +41,19 @@ def numerals_api():
               example: eleven
   """
   value = request.args.get('value')
-  to = request.args.get('to', 'cardinal')
+  to = request.args.get('to', 'words')
 
   if value:
-    if to == 'cardinal' or to == 'words':
+    if to == 'words':
       return plain_textify(num2words(value, to='cardinal'))
-    elif to == 'ordinal' or to =='rank':
+    elif to =='rank':
       return plain_textify(num2words(value, to='ordinal'))
-    elif to == 'numerals' or to == 'number':
+    elif to == 'number':
       return plain_textify(str(words2num(value)))
     else:
-      abort(400)
+      abort(400, "unknown 'to' value")
   else:
-    abort(400)
+    abort(400, "value to convert is required")
 
 @app.route('/convert/unit', methods=['GET'])
 def units_api():
