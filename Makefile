@@ -1,4 +1,4 @@
 .PHONY: test
 
 test:
-	pytest --cov=ncss_api tests/
+	pytest --cov=ncss_api --cov=tests tests/
