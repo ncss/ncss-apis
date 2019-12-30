@@ -130,6 +130,6 @@ def woah():
   woah = request.args.get('woah')
 
   if woah is None:
-    abort(400, "No woah was thrown :(")
+    abort(400, "No woah key detected :(")
   else:
     return plain_textify(catch)
