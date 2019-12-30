@@ -1,25 +1,16 @@
 # NCSS APIs
 
-## Emoji
+[![Build Status](https://travis-ci.org/kennib/ncss-api.svg?branch=master)](https://travis-ci.org/kennib/ncss-api)
 
-```/emoji/{emoji}```
+## Docs
 
-`emoji` The name or category an emoji
+Visit [http://localhost:5000/docs/](http://localhost:5000/docs/) or [http://apis.ncss.cloud/docs/](http://apis.ncss.cloud/docs/) for the Swagger api specification.
 
-## Syllables
 
-## Moon phase
+## Development
 
-## Golden hour
+Run the development server:
 
-## Convert
-
-### Number
-
-### Unit
-
-## ASCII art
-
-### Chart
-
-### Bar Chart
+```
+python run.py
+```
