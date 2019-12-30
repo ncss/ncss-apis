@@ -60,3 +60,90 @@ def test_convert_number_invalid_input(client):
     # try converting not a word number (should fail)
     res = client.get("/convert/number", query_string={"value": "bla", "to": "number"})
     assert res.status_code == 400
+
+def test_convert_units(client):
+    # test the original example in the api docs
+    query = {
+        "quantity": "3.14",
+        "unit": "km",
+        "to": "m",
+    }
+    res = client.get("/convert/unit", query_string=query)
+    assert res.status_code == 200
+    data = res.data.decode("utf-8")
+    assert data == "3140.0 meter"
+
+    # all params are required, so should fail with client error if any are missing/empty
+    query = {
+        "quantity": "",
+        "unit": "km",
+        "to": "m",
+    }
+    res = client.get("/convert/unit", query_string=query)
+    assert res.status_code == 400
+    assert "quantity" in res.get_json()["message"].lower()
+
+    query = {
+        "quantity": "3.14",
+        "unit": "",
+        "to": "m",
+    }
+    res = client.get("/convert/unit", query_string=query)
+    assert res.status_code == 400
+    assert "unit" in res.get_json()["message"].lower()
+
+    query = {
+        "quantity": "3.14",
+        "unit": "km",
+        "to": "",
+    }
+    res = client.get("/convert/unit", query_string=query)
+    assert res.status_code == 400
+    assert "to" in res.get_json()["message"].lower()
+    assert "unit" not in res.get_json()["message"].lower()
+
+    # now test garbage quantities
+    query = {
+        "quantity": "yesterday",
+        "unit": "km",
+        "to": "m",
+    }
+    res = client.get("/convert/unit", query_string=query)
+    assert res.status_code == 400
+
+    query = {
+        "quantity": "3.14ft",
+        "unit": "km",
+        "to": "m",
+    }
+    res = client.get("/convert/unit", query_string=query)
+    assert res.status_code == 400
+
+    # and garbage units (not found status, because the unit might be real, but
+    # we couldn't find a definition for it)
+    query = {
+        "quantity": "3.14",
+        "unit": "clearlynotaunit",
+        "to": "m",
+    }
+    res = client.get("/convert/unit", query_string=query)
+    assert res.status_code == 404
+
+    query = {
+        "quantity": "3.14",
+        "unit": "km",
+        "to": "clearlynotaunit",
+    }
+    res = client.get("/convert/unit", query_string=query)
+    assert res.status_code == 404
+
+    # now try to convert between units that don't make sense
+    query = {
+        "quantity": "3.14",
+        "unit": "km",
+        "to": "m^3",
+    }
+    res = client.get("/convert/unit", query_string=query)
+    assert res.status_code == 400
+    data = res.get_json()
+    assert "cannot" in data["message"].lower()
