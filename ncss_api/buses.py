@@ -161,13 +161,16 @@ def bus_hail():
                   type: array
                   description: An list of objects describing the stop times
   '''
-  try:
-    data = request.get_json()
-  except:
-    abort(400, "expected valid JSON content in request body")
-  stop_id = data['stop_id']
-  stop = [stop for stop in stops if stop['stop_id'] == stop_id]
+  data = request.get_json()
 
+  if data is None:
+    abort(400, "expecting json object in request body")
+
+  stop_id = data.get("stop_id")
+  if not stop_id:
+    abort(400, "stop_id is required")
+
+  stop = [stop for stop in stops if stop['stop_id'] == stop_id]
   if not stop:
     abort(404, 'Stop not found')
   else:
