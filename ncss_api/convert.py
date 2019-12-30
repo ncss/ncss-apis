@@ -97,21 +97,23 @@ def units_api():
   unit = request.args.get('unit')
   to = request.args.get('to')
 
-  if quantity == None:
+  if not quantity:
     abort(400, 'No quantity parameter given')
-  if unit == None:
+  if not unit:
     abort(400, 'No unit parameter given')
-  if to == None:
+  if not to:
     abort(400, 'No to parameter given')
 
   try:
-    unitless_quantity = units.parse_expression(quantity)
-  except pint.errors.DefinitionSyntaxError:
+    unitless_quantity = float(quantity)
+  except:
     abort(400, f'Quantity {quantity!r} is invalid')
+
   try:
     from_unit = units.parse_expression(unit)
   except pint.errors.UndefinedUnitError:
     abort(404, f'Unit {unit!r} not found')
+
   try:
     to_unit = units.parse_expression(to)
   except pint.errors.UndefinedUnitError:
