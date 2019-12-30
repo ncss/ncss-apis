@@ -92,10 +92,17 @@ def chart_bar_api():
 @app.route('/woah', methods=['GET'])
 def woah():
   '''
-    Basic endpoint to catch/throw "the woah"
+    Basic endpoint to catch "the woah"
     ---
     tags:
       - ASCII
+    parameters:
+      - in: query
+        name: woah
+        schema:
+          type: string
+          example: "catch the woah!"
+        description: We just want to check if the woah key is present. Then we know that you've thrown the woah!
     responses:
       200:
         description: A JSON object of us catching the woah
@@ -120,12 +127,9 @@ def woah():
         / \\
       /    \\
   '''
-  # udpated args syntax for GET request
-  value = request.args.get('value')
+  woah = request.args.get('woah')
 
-  if value is None:
-    abort(400, "No value field provided")
-  elif "catch" in value:
-    return plain_textify(catch)
+  if woah is None:
+    abort(400, "No woah was thrown :(")
   else:
-    abort(400, "How can I catch if you didnt throw?")
+    return plain_textify(catch)
