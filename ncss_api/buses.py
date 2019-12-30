@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 
 from flask import request, abort, jsonify
 
@@ -163,7 +164,7 @@ def bus_hail():
   try:
     data = request.get_json()
   except:
-    data = request.form
+    abort(400, "expected valid JSON content in request body")
   stop_id = data['stop_id']
   stop = [stop for stop in stops if stop['stop_id'] == stop_id]
 
@@ -175,8 +176,8 @@ def bus_hail():
   parse_time = lambda t: datetime.strptime(t, "%H:%M:%S").replace(year=datetime.now().year, month=datetime.now().month, day=datetime.now().day)
   format_time = lambda dt: dt.strftime('%-I:%M %p')
   try:
-    if 'time' in request.form:
-      query_time = parse_time(request.form['time'])
+    if 'time' in data:
+      query_time = parse_time(data['time'])
     else:
       query_time = datetime.now()
   except:
