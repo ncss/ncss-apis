@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_woah_invalid(client):
     res = client.get("/woah")
     assert res.status_code == 400
@@ -42,7 +39,6 @@ def test_asciiart_text(client):
     )
 
 
-@pytest.mark.skip(reason="not implemented yet; crashes")
 def test_barchart_invalid_input(client):
     # should not be allowed to give non-float values to query params
     res = client.get("/chart/bar", query_string={"one": "abc"})

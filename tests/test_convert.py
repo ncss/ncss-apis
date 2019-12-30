@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_convert_number(client):
     # 'value' query param is required
     res = client.get("/convert/number")
@@ -41,7 +38,6 @@ def test_convert_number(client):
     assert data == "minus ten point four"
 
 
-@pytest.mark.skip(reason="not implemented yet; 500 errors")
 def test_convert_number_invalid_input(client):
     # converting a number back to a number is invalid
     res = client.get("/convert/number", query_string={"value": 10, "to": "number"})

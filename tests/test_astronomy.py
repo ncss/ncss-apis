@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_goldenhour(client):
     # defaults to checking goldenhour for sydney
     res = client.get("/goldenhour")
@@ -48,6 +45,34 @@ def test_moonphase(client):
     data = res.data.decode("utf-8")
     assert data == "New Moon"
 
+    # test for the other implemented phases too
+    query = {
+        "year": 2019,
+        "month": 12,
+        "day": 25,
+    }
+    res = client.get("/moonphase", query_string=query)
+    assert res.status_code == 200
+    data = res.data.decode("utf-8")
+    assert data == "New Moon"
+    query = {
+        "year": 2019,
+        "month": 12,
+        "day": 12,
+    }
+    res = client.get("/moonphase", query_string=query)
+    assert res.status_code == 200
+    data = res.data.decode("utf-8")
+    assert data == "Full Moon"
+    query = {
+        "year": 2019,
+        "month": 12,
+        "day": 4,
+    }
+    res = client.get("/moonphase", query_string=query)
+    assert res.status_code == 200
+    data = res.data.decode("utf-8")
+    assert data == "First Quarter"
 
 def test_moonphase_invalid_input(client):
     # no month given
@@ -71,11 +96,17 @@ def test_moonphase_invalid_input(client):
     assert "day" in data
 
 
-@pytest.mark.skip(reason="not implemented yet; 500 errors")
 def test_moonphase_invalid_input2(client):
     # invalid year
     query = {
         "year": -45,
+        "month": 4,
+        "day": 1,
+    }
+    res = client.get("/moonphase", query_string=query)
+    assert res.status_code == 400
+    query = {
+        "year": "bla",
         "month": 4,
         "day": 1,
     }
@@ -103,8 +134,8 @@ def test_moonphase_invalid_input2(client):
     # not an integer
     query = {
         "year": 2000,
-        "month": 4,
-        "day": 4.5,
+        "month": 4.5,
+        "day": 4,
     }
     res = client.get("/moonphase", query_string=query)
     assert res.status_code == 400

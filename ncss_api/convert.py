@@ -43,17 +43,28 @@ def numerals_api():
   value = request.args.get('value')
   to = request.args.get('to', 'words')
 
-  if value:
-    if to == 'words':
-      return plain_textify(num2words(value, to='cardinal'))
-    elif to =='rank':
-      return plain_textify(num2words(value, to='ordinal'))
-    elif to == 'number':
-      return plain_textify(str(words2num(value)))
-    else:
-      abort(400, "unknown 'to' value")
-  else:
+  if not value:
     abort(400, "value to convert is required")
+
+  if to == 'words':
+    try:
+      result = num2words(value, to='cardinal')
+    except:
+      abort(400, "Invalid number to convert to words")
+  elif to =='rank':
+    try:
+      result = num2words(value, to='ordinal')
+    except:
+      abort(400, "Invalid number to convert to rank")
+  elif to == 'number':
+    try:
+      result = str(words2num(value))
+    except:
+      abort(400, "Invalid number word to convert to number")
+  else:
+    abort(400, "unknown 'to' value")
+
+  return plain_textify(result)
 
 @app.route('/convert/unit', methods=['GET'])
 def units_api():
@@ -127,4 +138,3 @@ def units_api():
     abort(400, f'Cannot convert from {unit} to {to}')
 
   return plain_textify(f'{to_value:P}')
-

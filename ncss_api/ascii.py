@@ -45,7 +45,7 @@ def ascii_art_api():
 @app.route('/chart/bar', methods=['GET'])
 def chart_bar_api():
   '''
-    Render data as a bar chart using ASCII art
+    Render data as a bar chart using ASCII art. Any number of key/value pairs may be provided.
     ---
     tags:
       - ASCII
@@ -77,10 +77,14 @@ def chart_bar_api():
               type: string
               example: item1 | ###############################                              | 12.0
   '''
-  # XXX: crashes if value cannot be converted to float
-  # XXX: crashes if no query string items
-  # XXX: api docs above should be more clear
-  data = {key: float(value) for key, value in request.args.items()}
+  try:
+    data = {key: float(value) for key, value in request.args.items()}
+  except ValueError:
+    abort(400, "One or more values was not a valid integer")
+
+  if not data:
+    abort(400, "Must provide at least one key/value pair")
+
   b = Bar(data)
   return plain_textify(b.render())
 

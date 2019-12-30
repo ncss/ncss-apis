@@ -48,23 +48,32 @@ def moon_phase_api():
   month = request.args.get('month')
   day = request.args.get('day')
 
-  # XXX: this crashes if any of the params aren't valid integers or valid
-  # year/month/day values.
-
-  if year == None:
+  if not year:
     abort(400, 'No year parameter given')
-  else:
-    year = int(year)
-  if month == None:
-    abort(400, 'No month parameter given')
-  else:
-    month = int(month)
-  if day == None:
+  if not day:
     abort(400, 'No day parameter given')
-  else:
-    day = int(day)
+  if not month:
+    abort(400, 'No month parameter given')
 
-  phase = a.moon_phase(datetime(year, month, day))
+  try:
+    year = int(year)
+  except:
+    abort(400, 'Year is an invalid number')
+  try:
+    month = int(month)
+  except:
+    abort(400, 'Month is an invalid number')
+  try:
+    day = int(day)
+  except:
+    abort(400, 'Day is an invalid number')
+
+  try:
+    dt = datetime(year, month, day)
+  except ValueError:
+    abort(400, 'Invalid date')
+
+  phase = a.moon_phase(dt)
 
   if phase < 3.5:
     phase_text = "New Moon"
@@ -111,8 +120,6 @@ def goldenhour_api():
   try:
     city_data = a[city]
   except KeyError:
-    # XXX: this is a plain text api but abort returns a json object.
-    # intentional?
     abort(404, "city not found in database")
 
   start = city_data.time_at_elevation(174)
@@ -120,4 +127,3 @@ def goldenhour_api():
   time = lambda dt: dt.strftime('%-I:%M %p')
 
   return plain_textify(f'Golden hour is {time(start)} - {time(end)} in {city}')
-
