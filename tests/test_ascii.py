@@ -2,12 +2,12 @@ def test_woah_invalid(client):
     res = client.get("/woah")
     assert res.status_code == 400
 
-    res = client.get("/woah", query_string={"value": "invalid"})
+    res = client.get("/woah", query_string={"invalid_key": "invalid_value"})
     assert res.status_code == 400
 
 
 def test_woah_ok(client):
-    res = client.get("/woah", query_string={"value": "catch"})
+    res = client.get("/woah", query_string={"woah": "catch the woah!"})
     assert res.status_code == 200
     data = res.data.decode("utf-8")
     assert "😲" in data
