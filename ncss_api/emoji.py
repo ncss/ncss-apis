@@ -31,7 +31,7 @@ def emoji_api(key=''):
               example: 🐩
   """
   by_key = list(emojislib.by_key(key))
-  by_name = emojislib.by_name(key).char
+  by_name = [emojislib.by_name(key).char] if emojislib.by_name(key) else []
   search_by_name = list(emojislib.search_by_name(key))
   search_by_key = list(emojislib.search_by_key(key))
   search_by_category = list(emojislib.search_by_cate(key))
