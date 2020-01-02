@@ -30,7 +30,12 @@ def emoji_api(key=''):
               type: string
               example: 🐩
   """
-  emojis = set(emojislib.by_key(key) or emojislib.by_name(key) or emojislib.search_by_name(key) or emojislib.search_by_key(key) or emojislib.search_by_cate(key))
+  by_key = list(emojislib.by_key(key))
+  by_name = emojislib.by_name(key).char
+  search_by_name = list(emojislib.search_by_name(key))
+  search_by_key = list(emojislib.search_by_key(key))
+  search_by_category = list(emojislib.search_by_cate(key))
+  emojis = set(by_key or by_name or search_by_name or search_by_key or search_by_category)
 
   if emojis:
     return plain_textify(str(random.choice(list(emojis))))
