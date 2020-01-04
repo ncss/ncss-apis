@@ -129,6 +129,8 @@ def bus_hail():
       - application/json
     parameters:
       - in: body
+        required: true
+        name: content
         schema:
           id: Hail
           type: object
