@@ -23,5 +23,5 @@ def secret():
               example: I'm not revealing my secret!
   '''
   random.seed(a='secret')
-  secret = ''.join(random.sample(string.printable, 100))
+  secret = ''.join(random.choices(string.ascii_letters+string.digits, k=100))
   return plain_textify(secret)
