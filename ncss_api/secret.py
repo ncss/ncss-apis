@@ -22,6 +22,11 @@ def secret():
               type: string
               example: I'm not revealing my secret!
   '''
-  random.seed(a='secret')
-  secret = ''.join(random.choices(string.ascii_letters+string.digits, k=100))
-  return plain_textify(secret)
+  agent = request.headers.get('User-Agent')
+  # Probably a browser
+  if 'Mozilla' in agent:
+    return plain_textify('No peeking! Use the requests library!')
+  else:
+    random.seed(a='secret')
+    secret = ''.join(random.choices(string.ascii_letters+string.digits, k=100))
+    return plain_textify(secret)
