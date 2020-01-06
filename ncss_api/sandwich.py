@@ -3,8 +3,8 @@ from flask import redirect
 
 from .app import app
 
-@app.route('/sandwich/<key>', methods=['GET'])
-def sandwich_api(key=''):
+@app.route('/sandwich/<thing>', methods=['GET'])
+def sandwich_api(thing=''):
   """
     Return information on whether something is a sandwich.
     ---
@@ -31,5 +31,5 @@ def sandwich_api(key=''):
                   description: critical information on your quest to understand why you want to be right about this so desperately.
 
   """
-  return redirect("https://ncss-sandwich-api.appspot.com/" + key, 307)
+  return redirect("https://ncss-sandwich-api.appspot.com/" + word, 307)
 
