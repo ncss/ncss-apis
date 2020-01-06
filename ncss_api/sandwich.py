@@ -31,7 +31,5 @@ def sandwich_api(key=''):
                   description: critical information on your quest to understand why you want to be right about this so desperately.
 
   """
-
-  # It's important to follow the protocol.
-  return redirect("https://ncss-sandwich-api.appspot.com/" + key, 418)
+  return redirect("https://ncss-sandwich-api.appspot.com/" + key, 307)
 
