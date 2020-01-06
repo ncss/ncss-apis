@@ -10,5 +10,6 @@ from . import (
     astronomy,
     syllables,
     secret,
+    sandwich
 )
 
