@@ -9,7 +9,6 @@ from . import (
     convert,
     astronomy,
     syllables,
-    secret,
-    sandwich
+    secret
 )
 
