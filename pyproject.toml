@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "ncss-apis"
+version = "0.1.0"
+description = ""
+authors = ["NCSS"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Flask = "^2.2.2"
+pytest = "^7.2.0"
+flask-swagger = "^0.2.14"
+flask-swagger-ui = "^4.11.1"
+gunicorn = "^20.1.0"
+requests = "^2.28.1"
+ascii_art = "^0.1.0"
+art = "^5.8"
+emojislib = "^0.0.1"
+num2words = "^0.5.12"
+words2num = "^0.2.3"
+Pint = "^0.20.1"
+astral = "1.10.1"
+syllables = "^1.0.6"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

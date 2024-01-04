@@ -1,4 +1,4 @@
-from ncss_api import app
+from ncss_apis import app
 
 if __name__ == '__main__':
   app.run(debug=True)

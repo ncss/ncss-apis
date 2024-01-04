@@ -1,6 +1,6 @@
 import pytest
 
-from ncss_api import app
+from ncss_apis import app
 
 @pytest.fixture
 def client():
